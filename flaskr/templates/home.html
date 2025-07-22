@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Bienvenido al inicio</h1>
+
+    {% if role == 'programador' %}
+        <p>Tu rol es: {{ role }}</p>
+    {% else %}
+        <p>No se ha definido un rol.</p>
+    {%- endif %}
+
+    <ul>
+        {% for note in notes %}
+        <li>
+            <div>
+                <h2>{{ note.title }}</h2>
+                <p>{{ note.content }}</p>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    
+</body>
+</html>
