@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crear una nueva nota</title>
+    <title>Editar una nota</title>
 </head>
 <body>
-    <h1>Crear una nueva nota</h1>
+    <h1>Editar una nota</h1>
     <form method="post">
 
         <label for="title"> Titulo </label>
-        <input type="text", name="title" id="title">
+        <input type="text", name="title" id=title, value="{{note.title}}">
         <br>
         <label for="content"> Contenido </label>
-        <input type="text", name="content" id="content">
+        <input type="text", name="content" id=content, value="{{note.content}}">
         <br>
         <input type="submit" value="Crear Nota">
     </form>
