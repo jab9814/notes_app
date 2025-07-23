@@ -1,10 +1,11 @@
 from flaskr.models import db, Note
-from flask.blueprints import Blueprint
 from flask import (
     redirect, 
     request, 
     render_template, 
     url_for, 
+    Blueprint,
+    flash
 )
 
 
@@ -20,6 +21,7 @@ def create_note():
         )
         db.session.add(note_db)
         db.session.commit()
+        flash('Nota creada con exito!', 'success')
         return redirect(url_for('home'))
     return render_template('note_form.html')
 
@@ -31,7 +33,8 @@ def edit_note(id: int):
         note.title = request.form.get('title', "")
         note.content = request.form.get('content', "")
         db.session.commit()
-        return redirect(url_for('notes.home'))
+        flash('Nota actualizada con exito!', 'success')
+        return redirect(url_for('home'))
     return render_template('edit_note_form.html', note=note)
 
 
@@ -40,5 +43,6 @@ def delete_note(id: int):
     note = Note.query.get_or_404(id)
     db.session.delete(note)
     db.session.commit()
+    flash('Nota eliminada con exito!', 'success')
     return redirect(url_for('home'))
 
