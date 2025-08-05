@@ -1,29 +1,18 @@
-from flaskr.config import Config
 from flaskr.models import db, Note
-from flaskr.notes.routes import notes_bp
-from flask import Flask, request, render_template
+from flask import Flask, render_template
+from flaskr.config_db_sqlite import ConfigDB
+from flaskr.notes_blueprint.info_pages import info_bp
+from flaskr.notes_blueprint.crud_notes import notes_bp
 
 
 app = Flask(__name__)
-app.config.from_object(Config)
+app.config.from_object(ConfigDB)
 db.init_app(app)
 app.register_blueprint(notes_bp)
-
-
-@app.route('/acerca-de')
-def about():
-    return "Esta es una aplicacion de prueba con flask."
-
-
-@app.route('/contacto', methods=['GET', 'POST'])
-def contact():
-    if request.method == 'POST':
-        return "Mensaje enviado con éxito.", 201
-    return "Pagina de contacto. Puedes enviar un mensaje aquí."
+app.register_blueprint(info_bp)
 
 
 @app.route('/')
 def home():
     notes = Note.query.all()
     return render_template('home.html', notes=notes)
-
