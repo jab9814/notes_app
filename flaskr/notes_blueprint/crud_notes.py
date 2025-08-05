@@ -1,4 +1,5 @@
-from flaskr.models import db, Note
+from flaskr.models import db, Note, StatusEnum
+from datetime import datetime
 from flask import (
     redirect, 
     request, 
@@ -18,10 +19,22 @@ def create_note():
     """ Creacion de notas  """
 
     if request.method == 'POST':
+        start_date = datetime.strptime(request.form.get('start_date'), '%Y-%m-%d').date()
+        end_date = datetime.strptime(request.form.get('end_date'), '%Y-%m-%d').date()
+        
+        if start_date > end_date:
+            flash('La fecha de inicio no puede ser mayor que la fecha de finalización', 'error')
+            return render_template('note_form.html', form_data=request.form)
+
         note_db = Note(
+            assigned_to=request.form.get('assigned_to', ""),
             title=request.form.get('title', ""),
             content=request.form.get('content', ""),
+            status=StatusEnum(request.form.get('status')),
+            start_date=start_date,
+            end_date=end_date
         )
+            
         db.session.add(note_db)
         db.session.commit()
         flash(
@@ -39,8 +52,24 @@ def edit_note(id: int):
 
     note = Note.query.get_or_404(id)
     if request.method == 'POST':
-        note.title = request.form.get('title', "")
-        note.content = request.form.get('content', "")
+        start_date = datetime.strptime(request.form.get("start_date"), '%Y-%m-%d').date()
+        end_date = datetime.strptime(request.form.get("end_date"), '%Y-%m-%d').date()
+        
+        if start_date > end_date:
+            flash('La fecha de inicio no puede ser mayor que la fecha de finalización', 'error')
+            return render_template('edit_note_form.html', note=note)
+            
+        updates = {
+            'title': request.form.get('title', ""),
+            'content': request.form.get('content', ""),
+            'assigned_to': request.form.get("assigned_to", ""),
+            'status': StatusEnum(request.form.get("status")),
+            'start_date': start_date,
+            'end_date': end_date
+        }
+        
+        for field, value in updates.items():
+            setattr(note, field, value)
         db.session.commit()
         flash(
             message='Nota actualizada con exito!', 

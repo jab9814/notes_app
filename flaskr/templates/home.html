@@ -21,9 +21,17 @@
         {% for note in notes %}
         <li>
             <div>
-                {{ note.title }}
+                {% for field, label in field_names.items() %}
+                    <strong>{{ label }}:</strong> 
+                    {% if field == 'created_at' %}
+                        {{ note[field].strftime('%Y-%m-%d %H:%M') }}
+                    {% elif field == 'status' %}
+                        {{ note[field].value }}
+                    {% else %}
+                        {{ note[field] }}
+                    {% endif %}<br>
+                {% endfor %}
                 <br>
-                {{ note.content }}
                 <a href="{{ url_for('notes.edit_note', id=note.id) }}">Editar Nota</a>
                 <br>
                 <form action="{{ url_for('notes.delete_note', id=note.id) }}" method="post">
