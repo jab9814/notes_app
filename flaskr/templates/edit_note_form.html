@@ -7,15 +7,49 @@
 </head>
 <body>
     <h1>Editar una nota</h1>
-    <form method="post">
 
-        <label for="title"> Titulo </label>
-        <input type="text", name="title" id=title, value="{{note.title}}">
-        <br>
-        <label for="content"> Contenido </label>
-        <input type="text", name="content" id=content, value="{{note.content}}">
-        <br>
-        <input type="submit" value="Crear Nota">
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        <ul>
+            {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% endwith %}
+    
+    <form method="post">
+        <label for="assigned_to">Asignado a</label>
+        <input type="text" name="assigned_to" id="assigned_to" value="{{note.assigned_to}}" required>
+        <br><br>
+        
+        <label for="title">Titulo</label>
+        <input type="text" name="title" id="title" value="{{note.title}}" required>
+        <br><br>
+        
+        <label for="content">Contenido</label>
+        <textarea name="content" id="content" required>{{note.content}}</textarea>
+        <br><br>
+        
+        <label for="status">Estado</label>
+        <select name="status" id="status" required>
+            <option value="Stand_by" {% if note.status.value == 'Stand_by' %}selected{% endif %}>Stand by</option>
+            <option value="Pending" {% if note.status.value == 'Pending' %}selected{% endif %}>Pending</option>
+            <option value="Progress" {% if note.status.value == 'Progress' %}selected{% endif %}>Progress</option>
+            <option value="Done" {% if note.status.value == 'Done' %}selected{% endif %}>Done</option>
+            <option value="Failed" {% if note.status.value == 'Failed' %}selected{% endif %}>Failed</option>
+        </select>
+        <br><br>
+        
+        <label for="start_date">Fecha de inicio</label>
+        <input type="date" name="start_date" id="start_date" value="{{note.start_date}}" required min="2024-01-01">
+        <br><br>
+        
+        <label for="end_date">Fecha de finalización</label>
+        <input type="date" name="end_date" id="end_date" value="{{note.end_date}}" required min="2024-01-01">
+        <br><br>
+        
+        <input type="submit" value="Actualizar Nota">
     </form>
 </body>
 </html>
