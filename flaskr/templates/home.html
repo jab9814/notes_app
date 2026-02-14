@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Bienvenido al inicio</h1>
+    {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        <ul>
+            {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    {% endwith %}
+
+    <ul>
+        {% for note in notes %}
+        <li>
+            <div>
+                {% for field, label in field_names.items() %}
+                    <strong>{{ label }}:</strong> 
+                    {% if field == 'created_at' %}
+                        {{ note[field].strftime('%Y-%m-%d %H:%M') }}
+                    {% elif field == 'status' %}
+                        {{ note[field].value }}
+                    {% else %}
+                        {{ note[field] }}
+                    {% endif %}<br>
+                {% endfor %}
+                <br>
+                <a href="{{ url_for('notes.edit_note', id=note.id) }}">Editar Nota</a>
+                <br>
+                <form action="{{ url_for('notes.delete_note', id=note.id) }}" method="post">
+                    <button type="submit">Eliminar Nota</button>
+                </form>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('notes.create_note') }}">agregar una nueva nota</a>
+    
+</body>
+</html>
